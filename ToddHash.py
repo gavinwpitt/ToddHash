@@ -28,7 +28,13 @@ def readFile(fileName):
 		for i in range(0,len(words)-1):
 			if(words[i] == "def"):
 				methodName = words[i+1].strip(':')
-				methodNames.append(methodName)			
+				methodName2 = ""
+				for char in methodName:
+					if ( char == "(" ):
+						break
+					else:
+						methodName2 += char
+				methodNames.append(methodName2)			
 
 	return methodNames
 
@@ -41,7 +47,8 @@ def toddHash():
 
 def translateDate(date):
 	dateArray = date.split("/")
-	month = dateArray[0]
+	month = int(dateArray[0])
+
 	if(month == 1):
 		month = "Jan"
 	if(month == 2):
@@ -69,7 +76,22 @@ def translateDate(date):
 
 	day = weekday(int(dateArray[2]), int(dateArray[0]), int(dateArray[1]))
 
-	return str(day) + month + dateArray[1]
+	if (day == 0):
+		day = "Mon"
+	if (day == 1):
+		day = "Tue"
+	if (day == 2):
+		day = "Wed"
+	if (day == 3):
+		day = "Thu"
+	if (day == 4):
+		day = "Fri"
+	if (day == 5):
+		day = "Sat"
+	if (day == 6):
+		day = "Sun"
+
+	return str(day) + " " + month + " " + dateArray[1]
 
 """
 Hash format:
@@ -83,7 +105,7 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 	if(currentCommit == 0):
 		print("Commit " + toddHash())
 		print("Author: " + authorName + " <" + email + ">")
-		print("Date: " + date + " 5:00:00 " + str(today.year)) #NOT DONE
+		print(translateDate(date)) #NOT DONE
 		print(" ") #newLine
 		print("Initial Commit")
 		print(" ") #newLine
@@ -92,7 +114,7 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 	if(currentCommit == finalCommit):
 		print("Commit " + toddHash())
 		print("Author: " + authorName + " <" + email + ">")
-		print("Date: " + date + " 5:00:00 " + str(today.year)) #NOT DONE
+		print(translateDate(date)) #NOT DONE
 		print(" ") #newLine
 		print("Final Commit")
 		print(" ") #newLine
@@ -100,7 +122,7 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 
 	print("Commit " + toddHash())
 	print("Author: " + authorName + " <" + email + ">")
-	print("Date: " + date + " 5:00:00 " + str(today.year)) #NOT DONE
+	print(translateDate(date)) #NOT DONE
 	print(" ") #newLine
 	print("Modified " + random.choice(methodNames)) #should be varying message
 	print(" ") #newLine
@@ -109,32 +131,40 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 
 
 def main():
-	#IF USER INPUT IS TAKEN, STDOUT CANNOT BE PIPED TO WHATEVER.txt
+	#IF USER INPUT IS TAKEN, STDOUT CANNOT BE PIPED TO W)HATEVER.txt
 	#USER INPUT SHOULD NOT BE TAKEN COMMAND LINE ARGUMENTS SHOULD BE USED.
 
+	#functionality statement
+	if(len(sys.argv) == 1 or sys.argv[1] == "-h"):
+		print("The Todd Hash Prints a faked git revisions log to stdout")
+		print("Run via Command Line Arguments. Example:")
+		print("python3 toddHash.py 'filename' 'your name' 'email' 'startdate' 'enddate' 'numberOfCommits'")
+		return
+
 	#Get User Input
-	filename = input("Enter the file name (example.py): ")
-	name = input("Name to sign commit log: ")
-	email = input("Email for commit log: ")
-	startdate = input("Start Date for commit log (MM/DD/YY): ")
-	enddate = input("End Date (MM/DD/YY): ")
-	numberOfCommits = input("Number of Commits: ")
+	filename = sys.argv[1]
+	name = sys.argv[2] + sys.argv[3]
+	email = sys.argv[4]
+	startdate = sys.argv[5]
+	enddate = sys.argv[6]
+	numberOfCommits = sys.argv[7]
 
 	#translate User Input
 	methodNames = readFile(filename)
-	startdate = translateDate(startdate)
-	endDateTime = translateDate(enddate)
+	#startdate = translateDate(startdate)
+	#endDateTime = translateDate(enddate)
+	
+
 
 	
 	#print(hashString)
 
-	for i in range(0, int(numberOfCommits)):
+	for i in range(0, int(numberOfCommits)-1):
 		if(i == 0):
 			generateHash(methodNames, name, email, startdate, i, numberOfCommits)
-		elif(i == numberOfCommits):
-			generateHash(methodNames, name, email, enddate, i, numberOfCommits)
 		else:
-			generateHash(methodNames, name, email, "Thu Feb 11", i, numberOfCommits)
+			generateHash(methodNames, name, email, startdate, i, numberOfCommits)
+	generateHash(methodNames, name, email, enddate, numberOfCommits, numberOfCommits)
 
 
 

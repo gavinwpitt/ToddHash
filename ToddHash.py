@@ -37,7 +37,12 @@ def readFile(fileName):
 				methodNames.append(methodName2)			
 
 	return methodNames
-
+"""
+Generates random string of characters.
+Used in the commit creating function
+@param - None
+@return 40 char string of a faked hash 
+"""
 def toddHash():
 	lettersAndNumbers = "0123456789abcdefghijklmnopqrstuvwxyz"
 	hashString = ""
@@ -45,6 +50,12 @@ def toddHash():
 		hashString += random.choice(lettersAndNumbers)
 	return hashString
 
+"""
+Translates date from dd/mm/yy Format into
+Day Mon ## format
+@param date: string in dd/mm/yy format
+@returns string of date in translated form.
+"""
 def translateDate(date):
 	dateArray = date.split("/")
 	month = int(dateArray[0])
@@ -94,15 +105,24 @@ def translateDate(date):
 	return str(day) + " " + month + " " + dateArray[1]
 
 """
-Hash format:
+Commmit format:
 commit (toddHash())
 Author (Author)
-Date(system time?)
+Date(given dates)
 Commit Message (i.e. initial commit)
 
+This function prints out the commits.
+Prints it out in stack format (initial commit at bottom, final commit on top).
+
+@param - methodNames: List of strings that represent Method Names from given file.
+@param - authorName: Takes in author of file
+@param - email: takes in email to be forged to git log
+@param - currentCommit - takes in value of current commit
+@param - finalCommit: takes in value of the final commit (total nubmer of commits supplied)
+returns nothing
 """
 def generateHash(methodNames, authorName, email, date, currentCommit, finalCommit):
-	if(currentCommit == 0):
+	if(currentCommit == finalCommit):
 		print("Commit " + toddHash())
 		print("Author: " + authorName + " <" + email + ">")
 		print(translateDate(date)) #NOT DONE
@@ -111,7 +131,7 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 		print(" ") #newLine
 		return
 
-	if(currentCommit == finalCommit):
+	if(currentCommit == 0):
 		print("Commit " + toddHash())
 		print("Author: " + authorName + " <" + email + ">")
 		print(translateDate(date)) #NOT DONE
@@ -129,7 +149,14 @@ def generateHash(methodNames, authorName, email, date, currentCommit, finalCommi
 	return
 
 
-
+"""
+Main function that runs program.
+Takes in user arguments, and prints a usage case if there are no command line arguments.
+Runs readFile which returns a list of method names.
+Runs for loop in range of desired commits that
+@param - none except program arguments
+@return - none, but prints faked hashs to stdout
+"""
 def main():
 	#IF USER INPUT IS TAKEN, STDOUT CANNOT BE PIPED TO W)HATEVER.txt
 	#USER INPUT SHOULD NOT BE TAKEN COMMAND LINE ARGUMENTS SHOULD BE USED.
@@ -143,28 +170,22 @@ def main():
 
 	#Get User Input
 	filename = sys.argv[1]
-	name = sys.argv[2] + sys.argv[3]
+	name = sys.argv[2] + " " + sys.argv[3]
 	email = sys.argv[4]
 	startdate = sys.argv[5]
 	enddate = sys.argv[6]
 	numberOfCommits = sys.argv[7]
-
-	#translate User Input
+	#get List of method names from given file.
 	methodNames = readFile(filename)
-	#startdate = translateDate(startdate)
-	#endDateTime = translateDate(enddate)
+
 	
 
 
 	
 	#print(hashString)
 
-	for i in range(0, int(numberOfCommits)-1):
-		if(i == 0):
-			generateHash(methodNames, name, email, startdate, i, numberOfCommits)
-		else:
-			generateHash(methodNames, name, email, startdate, i, numberOfCommits)
-	generateHash(methodNames, name, email, enddate, numberOfCommits, numberOfCommits)
+	for i in range(0, int(numberOfCommits)):
+			generateHash(methodNames, name, email, startdate, i, int(numberOfCommits) - 1)
 
 
 

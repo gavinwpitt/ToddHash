@@ -1,7 +1,8 @@
 # ToddHash
 The Todd Wellman Signature Hashing Method
 
-=================================Back Ground Story ==========================================================
+=================Back Ground Story======
+
 This program is inspired by my roomate and friend, Todd Wellman.
 
 Almost all computer science courses at RIT require the student to use version control.
@@ -17,7 +18,8 @@ The program is a python script that takes in a file that you are to fake and pul
 The funciton then generates a fake git log with a 'final' and 'initial' commit, and a 'modified "methodname"' commit in bewteen.
 
 
-===============================Functionality=================================================================
+=================Functionality=====
+
 ToddHash.py currently only handles faking python commits. Java and C implementation will be developed soon.
 To run program navigate to the folder with desired file to fake commits for and run:
 
@@ -25,3 +27,5 @@ To run program navigate to the folder with desired file to fake commits for and 
   
 and it will print out to the terminal a faked git log.
 To fake a revisions.txt simply append '> revisions.txt' to pipe the output to a txt file.
+
+A fake python file is provided to test the ToddHash
